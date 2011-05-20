@@ -1,0 +1,111 @@
+riff - Raw Image File Flasher version 0.4.0
+
+=================================================================================
+Description:
+=================================================================================
+A tool for flashing a device.
+
+=================================================================================
+Hardware and software requirements:
+=================================================================================
+NOTE that building the tool requires the following packages to be installed:
+
+libusb-dev-1.0-0 
+riff-loadercomm
+riff-configpack
+
+NOTE: To use riff on internal development board riff-configpack-internal also 
+needs to be installed. To use internal config pack instead of default create a 
+symlink to /usr/share/riff/snowball_internal/config in $HOME/.riff/config
+$ ln -s /usr/share/riff/snowball_internal/config $HOME/.riff/config
+
+=================================================================================
+Usage:
+=================================================================================
+
+$ sudo make install
+
+Will build from source and put the binary and lib in /usr/bin/share and /usr/lib/
+respectively. It's then possible to run riff from anywhere.
+
+## Configuration file ##
+A template config file is provided in the source tree as config/riff.config
+It will be renamed and placed in /usr/share/riff/
+when using the make install target.
+
+This file can be overridden with a user-specific config file placed in 
+$HOME/.riff, or by providing a full path to a config file at 
+runtime, as option on the command line (using the -c option).
+
+riff will look for configuration file to use in the following order:
+1) Config file provided on command line (using the -c option) at runtime.
+2) Config file in user's home directory ($HOME/.riff/config)
+3) /usr/share/riff
+
+
+## Running ##
+
+Usage: riff [OPTION]...[FILE]...
+
+ Available command line arguments are:
+
+   -h, --help				Display this help message.
+   -m, --mode ACTION			Select the mode.
+ 					ACTION is `flash` or `erase`
+   -c, --config PATH			Give path to configuration file.
+   -f, --flashimage IMAGEPATH		Give path to flashimage.
+   -a, --address FLASHADDR		Give a start address in hex.
+   -l, --length HEXLENGTH		Length of the dump [Byte] in hex.
+   -d, --dumppath DUMPPATH		File path on PC where to store dump.
+   -v, --verbose			Shows more detailed information.
+       --version			Shows version information.
+
+Examples:
+
+$ riff -f <path/to/flashimage>
+
+Default mode 'flash' will be used, and configuration originally from config/riff.config
+but put in /usr/share/riff will be used (if the user hasn't overridden this file
+by its own in $HOME/.riff/config).
+The flashimage at the provided path will be flashed onto the device starting at address 0.
+
+To start at any other address than 0, use
+
+$ riff -f <path/to/flashimage> -a <address>
+
+WARNING:
+NOTE THAT RIFF HAS NO WAY OF KNOWING WHETHER YOU ARE OVERWRITING IMPORTANT
+SECTIONS ON YOUR DEVICE OR NOT WHEN FLASHING! THE TOOL DOES NOT WARN YOU OR 
+PREVENT YOU FROM PROVIDING ANY ADDRESS TO FLASH TO. 
+In other words: it's up to you to know what you're doing, the tool takes no 
+responsibility for it!
+
+Path to flashimage can also be specified in the config file and the -f flag
+can then be omitted.
+
+
+Build from source without installing:
+$ make 
+
+riff binary ends up in riff directory. To run, libcdal (located in CDAL
+directory) must be then be added to your LD_LIBRARY_PATH.
+
+=================================================================================
+Known issues:
+=================================================================================
+1) Linux can't find device.
+Power down device and disconnect and reconnect USB cable. 
+Restart the flash tool and power up the device.
+
+=================================================================================
+Version history and changelog:
+=================================================================================
+0.3.0 Initial version.
+0.4.0 Dump functionality added.
+0.4.1 Packaging and README updated
+
+=================================================================================
+Contact and support
+=================================================================================
+http://igloocommunity.org/support
+

@@ -1,0 +1,9 @@
+Package: riff
+Version: 0.4.0
+Priority: optional
+Architecture: all
+Depends: libusb-1.0-0, riff-configpack (>= 0.4.0), riff-loadercomm (>= 0.4.0)
+Installed-Size: 
+Maintainer: igloocommunity
+Section: devel
+Description: A flashing tool initially developed for igloocommunity.org and snowball devices.

@@ -1,0 +1,15 @@
+.project
+.cproject
+LCD/liblcdriver.so
+LCD/liblcdriver_x64.so
+CDAL/core
+CDAL/libcdal.so
+riff/core
+riff/riff
+core
+*~
+*.o
+*.BASE.*.txt
+*.BACKUP.*.txt
+*.REMOTE.*.txt
+*.orig
