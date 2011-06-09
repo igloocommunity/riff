@@ -29,7 +29,7 @@ static int DUT_PRODUCT_ID = 0x8500;
 static libusb_context* context;
 static Thread* workerThread;
 static void* LibusbWorker(void* arg);
-bool shutdown = false;
+volatile bool shutdown = false;
 int error = 0;
 
 static EventCallback_t OnDeviceCallback = NULL;

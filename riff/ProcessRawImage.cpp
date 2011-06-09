@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include "LCDriver.h"
+
 using namespace flash;
 
 ProcessRawImage::ProcessRawImage(const char* path, uint64 start, int useBulk, int deleteBuffers):
@@ -36,8 +37,9 @@ ProcessRawImage::ProcessRawImage(const char* path, uint64 start, int useBulk, in
 
 int ProcessRawImage::run(DUT* dut)
 {
-	logger_.log(Logger::PROGRESS, "Flashing raw image...");
+    logger_.log(Logger::PROGRESS, "Flashing raw image...");
     uint64 length = filesize(pchPath);
+    logger_.log(Logger::PROGRESS, "Filesize: %lld", length);
     int error = 0;
 
     if (length != 0) {
@@ -60,13 +62,14 @@ int ProcessRawImage::run(DUT* dut)
     return error;
 }
 
-size_t ProcessRawImage::filesize(const char* filename)
+uint64 ProcessRawImage::filesize(const char* filename)
 {
-    struct stat st;
+    struct stat64 st;
 
-    if (stat(filename, &st) == 0)
+    if (stat64(filename, &st) == 0)
+    {	
         return st.st_size;
-
+    }
     return 0;
 }
 

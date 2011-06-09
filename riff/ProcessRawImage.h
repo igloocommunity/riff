@@ -49,7 +49,7 @@ public:
 
 private:
     Logger logger_;
-    size_t filesize(const char* filename);
+    uint64 filesize(const char* filename);
     const char* pchPath;
     uint64 uiStart;
     uint32 uiDevice;

@@ -26,11 +26,11 @@
 #include <cstdio>
 using namespace std;
 
-bool isDone = false;
+volatile bool isDone = false;
 const string info = \
                     "\n \
 ----------------------- riff - Raw Image File Flasher -------------------------\n \
-Version: 0.4.1\n \
+Version: 0.4.2\n \
 "
                     "Flash a device. Try `riff --help' for more information. \n \
 "

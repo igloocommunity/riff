@@ -1,4 +1,4 @@
-riff - Raw Image File Flasher version 0.4.0
+riff - Raw Image File Flasher version 0.4.2
 
 =================================================================================
 Description:
@@ -102,7 +102,8 @@ Version history and changelog:
 =================================================================================
 0.3.0 Initial version.
 0.4.0 Dump functionality added.
-0.4.1 Packaging and README updated
+0.4.1 Packaging and README updated.
+0.4.2 Larger image file support.
 
 =================================================================================
 Contact and support
