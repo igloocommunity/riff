@@ -45,7 +45,7 @@ debian:	clean all
 	cp CDAL/libcdal.so debian/usr/lib/
 	cp -r doc/man/temp/riff.1.gz debian/usr/share/man/man1
 	
-	dpkg-deb --build debian packages/riff.deb || error
+	fakeroot dpkg-deb --build debian packages/riff.deb || error
 	rm -rf debian
 	rm -rf doc/man/temp
 	
