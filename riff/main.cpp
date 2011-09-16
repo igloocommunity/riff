@@ -131,6 +131,10 @@ void UsbDeviceEventCallback(DeviceStatus_t status, DeviceEvent_t event, Device_t
             logger_->log(Logger::ERROR, "Unknown USB event %d", event);
             break;
         }
+    } else if (COMM_DEVICE_LIBUSB_FAILED_TO_OPEN_PORT == status) {
+        logger_->log(Logger::ERROR, "Cannot open USB device. Are you root?", status);
+        isDone = true;
+        exitstatus = 1;
     } else {
         logger_->log(Logger::ERROR, "USB device error %d", status);
     }
