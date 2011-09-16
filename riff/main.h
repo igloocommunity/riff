@@ -31,7 +31,7 @@ enum ConnectionType {
 
 Logger* logger_;
 Config* config_;
-char configFile[PATH_LENGTH] = "/usr/share/riff/config";
+char configFile[PATH_LENGTH] = RIFF_CONFIG_PREFIX "/share/riff/config";
 char flashimage[PATH_LENGTH] = "\0";
 char address[PATH_LENGTH] = "0";
 char length[PATH_LENGTH] = "0";

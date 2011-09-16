@@ -1,14 +1,16 @@
 # Makefile - riff
 
+DESTDIR := 
+PREFIX := /usr
+
 .PHONY: all
 all: \
  	CDAL \
  	riff
 
-
 .PHONY: riff
 riff: CDAL
-	cd riff/ && $(MAKE) -f riff.mk
+	cd riff/ && $(MAKE) -f riff.mk PREFIX=$(PREFIX)
 
 .PHONY: CDAL
 CDAL:
@@ -49,8 +51,6 @@ debian:	clean all
 	rm -rf debian
 	rm -rf doc/man/temp
 
-DESTDIR := 
-PREFIX := /usr
 INSTDIR = $(DESTDIR)$(PREFIX)
 
 .PHONY: install
