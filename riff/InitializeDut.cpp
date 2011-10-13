@@ -36,7 +36,7 @@ int InitializeDut::readIsswFile(char* buf)
     isswImage = fopen(isswPath_, "rb");
 
     if (isswImage == NULL) {
-        logger_.log(Logger::ERROR, "InitializeDut.cpp (%d) %s() error while opening file %s", __LINE__, __FUNCTION__, isswPath_);
+        logger_.log(Logger::ERR, "InitializeDut.cpp (%d) %s() error while opening file %s", __LINE__, __FUNCTION__, isswPath_);
         return -1;
     }
 
@@ -54,7 +54,7 @@ int InitializeDut::readSecondIsswFile(char* buf)
     xloaderImage = fopen(xloaderPath_, "rb");
 
     if (xloaderImage == NULL) {
-        logger_.log(Logger::ERROR, "InitializeDut.cpp (%d) %s() error while opening file %s", __LINE__, __FUNCTION__, xloaderPath_);
+        logger_.log(Logger::ERR, "InitializeDut.cpp (%d) %s() error while opening file %s", __LINE__, __FUNCTION__, xloaderPath_);
         return -1;
     }
 
@@ -70,7 +70,7 @@ int InitializeDut::readPwrMgtFile(char* buf)
     pwrmgmtImage = fopen(pwrmgmtPath_, "rb");
 
     if (pwrmgmtImage == NULL) {
-        logger_.log(Logger::ERROR, "InitializeDut.cpp (%d) %s() error while opening file %s", __LINE__, __FUNCTION__, pwrmgmtPath_);
+        logger_.log(Logger::ERR, "InitializeDut.cpp (%d) %s() error while opening file %s", __LINE__, __FUNCTION__, pwrmgmtPath_);
         return -1;
     }
 
@@ -86,7 +86,7 @@ int InitializeDut::readMeminitFile(char* buf)
     meminitImage = fopen(meminitPath_, "rb");
 
     if (meminitImage == NULL) {
-        logger_.log(Logger::ERROR, "InitializeDut.cpp (%d) %s() error while opening file %s", __LINE__, __FUNCTION__, meminitPath_);
+        logger_.log(Logger::ERR, "InitializeDut.cpp (%d) %s() error while opening file %s", __LINE__, __FUNCTION__, meminitPath_);
         return -1;
     }
 
@@ -102,7 +102,7 @@ int InitializeDut::readNormal(char* buf)
     normalImage = fopen(normalPath_, "rb");
 
     if (normalImage == NULL) {
-        logger_.log(Logger::ERROR, "InitializeDut.cpp (%d) %s() error while opening file %s", __LINE__, __FUNCTION__, normalPath_);
+        logger_.log(Logger::ERR, "InitializeDut.cpp (%d) %s() error while opening file %s", __LINE__, __FUNCTION__, normalPath_);
         return -1;
     }
 
@@ -378,7 +378,7 @@ int InitializeDut::run(DUT* dut)
     error = initializeHardware(commDevice);
     if (0 != error)
     {
-    	logger_.log(Logger::ERROR,"LCD ERROR: Error while initializing device %d", error);
+        logger_.log(Logger::ERR,"LCD ERROR: Error while initializing device %d", error);
         return error;
     }
 
@@ -389,7 +389,7 @@ int InitializeDut::run(DUT* dut)
     error = CreateContext(&lcdContext, dut->getId());
     if (0 != error)
     {
-    	logger_.log(Logger::ERROR,"LCD ERROR: Error while creating LCD context %d", error);
+        logger_.log(Logger::ERR,"LCD ERROR: Error while creating LCD context %d", error);
         return error;
     }
 
@@ -397,7 +397,7 @@ int InitializeDut::run(DUT* dut)
     error = ConfigureCommunicationDevice(lcdContext, (void*)comm_read_nowait, (void*)comm_write_nowait, (void*)comm_cancel);
     if (0 != error)
     {
-    	logger_.log(Logger::ERROR,"LCD ERROR: Error while configuring communication device %d", error);
+        logger_.log(Logger::ERR,"LCD ERROR: Error while configuring communication device %d", error);
         return error;
     }
 
@@ -405,7 +405,7 @@ int InitializeDut::run(DUT* dut)
     error = SwitchProtocolFamily(lcdContext, R15_PROTOCOL_FAMILY);
     if (0 != error)
     {
-    	logger_.log(Logger::ERROR,"LCD ERROR: Error while setting protocol family %d", error);
+        logger_.log(Logger::ERR,"LCD ERROR: Error while setting protocol family %d", error);
         return error;
     }
 
@@ -413,7 +413,7 @@ int InitializeDut::run(DUT* dut)
     error = StartContext(lcdContext, deviceObjectStorage);
     if (0 != error)
     {
-    	logger_.log(Logger::ERROR,"LCD ERROR: Error while starting LCD context %d", error);
+        logger_.log(Logger::ERR,"LCD ERROR: Error while starting LCD context %d", error);
         return error;
     }
 
@@ -422,7 +422,7 @@ int InitializeDut::run(DUT* dut)
     error = SetProgressCallback(lcdContext, (void*)comm_progress);
     if (0 != error)
     {
-    	logger_.log(Logger::ERROR,"LCD ERROR: Error while setting Progress listener %d", error);
+        logger_.log(Logger::ERR,"LCD ERROR: Error while setting Progress listener %d", error);
         return error;
     }
 
@@ -431,7 +431,7 @@ int InitializeDut::run(DUT* dut)
     error = System_LoaderStartupStatus(dut->getLCDContext(), version, &versionSize, protocol, &protocolSize);
     if (0 != error)
     {
-    	logger_.log(Logger::ERROR,"LCD ERROR: Failed to receive loader startup status %d", error);
+        logger_.log(Logger::ERR,"LCD ERROR: Failed to receive loader startup status %d", error);
         return error;
     }
 

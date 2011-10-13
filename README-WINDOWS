@@ -8,39 +8,42 @@ A tool for flashing a device.
 =================================================================================
 Hardware and software requirements:
 =================================================================================
-NOTE that building the tool requires the following packages to be installed:
+NOTE that building the tool requires the following libraries and header file to 
+be placed on 'dependencies' folder:
 
-libusb-dev-1.0-0 
-riff-loadercomm
-riff-configpack
+libusb.lib (libusb-win32 library for Windows, rename the library to libusb.lib)
+usb.h
+
+LCDriver_CNH1606432.lib (riff-laodercomm library on  Igloo)
+LCDriver.h
 
 NOTE: To use riff on internal development board riff-configpack-internal also 
-needs to be installed. To use internal config pack instead of default create a 
-symlink to /usr/share/riff/snowball_internal/config in $HOME/.riff/config
-$ ln -s /usr/share/riff/snowball_internal/config $HOME/.riff/config
+needs to be installed. To use internal config pack instead of default use 
+'snowball_internal' config pack.
 
 =================================================================================
 Usage:
 =================================================================================
 
-$ sudo make install
+'riff' build requires 'CDAL' library (CDAL.lib), therefore build the CDAL 
+project before building the project for 'riff'. Use 'Release' build to get
+less debug messages during runtime.
 
-Will build from source and put the binary and lib in /usr/bin/share and /usr/lib/
-respectively. It's then possible to run riff from anywhere.
+The required lib and executable will be created in a 'output' folder. Copy 
+'LCDriver_CNH1606432.dll' to 'output' folder to run 'riff.exe'
 
 ## Configuration file ##
 A template config file is provided in the source tree as config/riff.config
-It will be renamed and placed in /usr/share/riff/
-when using the make install target.
+It will be renamed and placed in <build root>/output/riff/config
 
 This file can be overridden with a user-specific config file placed in 
-$HOME/.riff, or by providing a full path to a config file at 
+<user home directory>/.riff, or by providing a full path to a config file at 
 runtime, as option on the command line (using the -c option).
 
 riff will look for configuration file to use in the following order:
 1) Config file provided on command line (using the -c option) at runtime.
-2) Config file in user's home directory ($HOME/.riff/config)
-3) /usr/share/riff
+2) Config file in user's home directory (<user home directory>/.riff/config)
+3) /<executable directory>/riff/config
 
 
 ## Running ##
@@ -65,8 +68,8 @@ Examples:
 $ riff -f <path/to/flashimage>
 
 Default mode 'flash' will be used, and configuration originally from config/riff.config
-but put in /usr/share/riff will be used (if the user hasn't overridden this file
-by its own in $HOME/.riff/config).
+but put in <executable directory>/riff will be used (if the user hasn't overridden 
+this file by its own in <user home directory>/.riff/config).
 The flashimage at the provided path will be flashed onto the device starting at address 0.
 
 To start at any other address than 0, use
@@ -83,12 +86,6 @@ responsibility for it!
 Path to flashimage can also be specified in the config file and the -f flag
 can then be omitted.
 
-
-Build from source without installing:
-$ make 
-
-riff binary ends up in riff directory. To run, libcdal (located in CDAL
-directory) must be then be added to your LD_LIBRARY_PATH.
 
 =================================================================================
 Known issues:

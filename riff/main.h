@@ -29,9 +29,15 @@ enum ConnectionType {
 };
 
 
+#ifdef _WIN32
+#endif
 Logger* logger_;
 Config* config_;
+#ifdef _WIN32
+char configFile[PATH_LENGTH] = "./riff/config";
+#else
 char configFile[PATH_LENGTH] = RIFF_CONFIG_PREFIX "/share/riff/config";
+#endif
 char flashimage[PATH_LENGTH] = "\0";
 char address[PATH_LENGTH] = "0";
 char length[PATH_LENGTH] = "0";

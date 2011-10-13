@@ -20,7 +20,7 @@ Prints a breif description of the command-line options.
 
 .B	-m ACTION, --mode ACTION
 .br
-Use ACTION to select flash or erase mode.
+Use ACTION to select flash, erase or dump mode.
 
 .B	-c PATH, --config PATH
 .br

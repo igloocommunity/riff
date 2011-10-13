@@ -13,9 +13,9 @@
 #pragma once
 
 //#define _DEBUG
+#define DEBUG_ERROR
 #ifdef _DEBUG
 #define DEBUG_INFO
-#define DEBUG_ERROR
 #define DEBUG_HEXDUMP
 #define DEBUG_HEXDUMP_SIZE 1024
 #endif
@@ -35,7 +35,11 @@
 class Debug
 {
 public:
+#ifdef _WIN32
+    inline static void error(const char* format, ...) {
+#else
     inline static void error(const char* format, ...) __attribute__((format(printf, 1, 0))) {
+#endif
 #ifdef DEBUG_ERROR
         flockfile(stdout);
         printf("ERROR - ");
@@ -49,7 +53,11 @@ public:
 #endif
     }
 
+#ifdef _WIN32
+    static inline void info(const char* format, ...) {
+#else
     static inline void info(const char* format, ...) __attribute__((format(printf, 1, 0))) {
+#endif
 #ifdef DEBUG_INFO
         flockfile(stdout);
         printf("INFO - ");

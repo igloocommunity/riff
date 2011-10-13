@@ -29,12 +29,12 @@ EraseArea::EraseArea(const char* path, uint64 start, uint64 length):
 
 int EraseArea::run(DUT* dut)
 {
-	logger_.log(Logger::PROGRESS, "Erasing area...");
+    logger_.log(Logger::PROGRESS, "Erasing area...");
     int error = Flash_EraseArea(dut->getLCDContext(), pchPath, uiStart, uiLength);
 
     if (0 != error)
     {
-    	logger_.log(Logger::ERROR,"LCD ERROR: Erase area failed %d", error);
+        logger_.log(Logger::ERR,"LCD ERROR: Erase area failed %d", error);
         return error;
     }
 

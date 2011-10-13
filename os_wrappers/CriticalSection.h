@@ -17,7 +17,10 @@
 
 #pragma once
 
-#ifndef _WIN32
+#ifdef _WIN32
+#include <windows.h>
+#include <process.h>
+#else
 #include <pthread.h>
 #endif
 

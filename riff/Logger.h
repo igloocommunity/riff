@@ -30,7 +30,7 @@ public:
 
     enum LogSeverity {
         PROGRESS,
-        ERROR,
+        ERR,
         WARNING,
         INFO
     };
@@ -58,7 +58,11 @@ public:
      * @param[in] format - printf style format of the message.
      * @param[in] ...    - variable argument list.
      */
+#ifdef _WIN32
+    void log(LogSeverity severity, const char* format, ...) const;
+#else
     void log(LogSeverity severity, const char* format, ...) const __attribute__((format(printf, 3, 0)));
+#endif
 
     /**
      * @brief Print hex dump of the buffer.

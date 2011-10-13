@@ -10,6 +10,7 @@
  *
  */
 
+#include "stdafx.h"
 #include "CommException.h"
 #include <stdexcept>
 #include <sstream>

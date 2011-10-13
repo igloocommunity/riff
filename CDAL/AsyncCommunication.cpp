@@ -9,7 +9,7 @@
  * License terms: 3-clause BSD license
  *
  */
-
+#include "stdafx.h"
 #include "AsyncCommunication.h"
 #include "CommDevice.h"
 #include "Debug.h"

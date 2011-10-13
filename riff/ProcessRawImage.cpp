@@ -46,7 +46,7 @@ int ProcessRawImage::run(DUT* dut)
         error = Flash_FlashRaw(dut->getLCDContext(), pchPath, uiStart, length, uiDevice, iUseBulk, iDeleteBuffers);
         if (0 != error)
         {
-        	logger_.log(Logger::ERROR,"LCD ERROR: Process raw image failed %d", error);
+            logger_.log(Logger::ERR,"LCD ERROR: Process raw image failed %d", error);
             return error;
         }
 
@@ -55,7 +55,7 @@ int ProcessRawImage::run(DUT* dut)
         logger_.log(Logger::PROGRESS, "Flashing finished successfully");
     } else {
         error = -1;
-        logger_.log(Logger::ERROR,"LCD ERROR: Flash image is empty or doesn't exist %d", error);
+        logger_.log(Logger::ERR,"LCD ERROR: Flash image is empty or doesn't exist %d", error);
         return error;
     }
 
@@ -64,12 +64,21 @@ int ProcessRawImage::run(DUT* dut)
 
 uint64 ProcessRawImage::filesize(const char* filename)
 {
+#ifdef _WIN32
+    struct _stat64 st;
+
+    if (_stat64(filename, &st) == 0)
+    {
+        return st.st_size;
+    }
+#else
     struct stat64 st;
 
     if (stat64(filename, &st) == 0)
     {	
         return st.st_size;
     }
+#endif
     return 0;
 }
 

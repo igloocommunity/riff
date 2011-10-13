@@ -15,6 +15,7 @@
  * @{
  */
 
+
 #include "Logger.h"
 #include <string>
 #include <cstdio>
@@ -22,6 +23,14 @@
 #include <cstdarg>
 #include <cstddef>
 using namespace std;
+
+#ifdef _WIN32
+#define flockfile _lock_file
+#define funlockfile _unlock_file
+#define popen _popen
+#define pclose _pclose
+#define localtime_r(t, lt) localtime_s(lt, t)
+#endif
 
 bool Logger::verbose_;
 
@@ -42,7 +51,7 @@ void Logger::log(LogSeverity severity, const char* format, ...) const
     tm lt;
     localtime_r(&t, &lt);
 
-    if (verbose_ || severity == Logger::PROGRESS || severity == Logger::ERROR) {
+    if (verbose_ || severity == Logger::PROGRESS || severity == Logger::ERR) {
         flockfile(console_);
         fprintf(console_, "%02d:%02d:%02d ", lt.tm_hour, lt.tm_min, lt.tm_sec);
 

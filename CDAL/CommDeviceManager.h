@@ -15,7 +15,11 @@
 #include "CDAL.h"
 #include "CommDevice.h"
 #include <vector>
+#ifdef _WIN32
+#include <usb.h>
+#else
 #include <libusb.h>
+#endif
 
 class CommDeviceManager
 {

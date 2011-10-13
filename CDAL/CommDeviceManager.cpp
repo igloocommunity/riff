@@ -10,6 +10,7 @@
  *
  */
 
+#include "stdafx.h"
 #include "CommDeviceManager.h"
 #include "CommDevice.h"
 #include "CommException.h"

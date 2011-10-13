@@ -18,16 +18,25 @@
 #pragma once
 #include <sstream>
 #include <string>
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 using namespace std;
+
 class Utilities
 {
 public:
+
     static void sleep(int ms) {
+#ifndef _WIN32
         timespec delay;
         delay.tv_sec = 0;
         delay.tv_nsec = ms * 1000000;
         nanosleep(&delay, 0);
+#else
+        Sleep(ms);
+#endif
     }
 
     template<typename T, typename F>

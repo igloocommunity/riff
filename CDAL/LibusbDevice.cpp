@@ -10,6 +10,7 @@
  *
  */
 
+#include "stdafx.h"
 #include "LibusbDevice.h"
 #include "Debug.h"
 #include "CommException.h"

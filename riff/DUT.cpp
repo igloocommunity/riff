@@ -31,7 +31,7 @@ using namespace std;
     do { \
         if (0 != error) \
         { \
-            logger_.log(Logger::ERROR,"COMMAND ERROR: %s %d", message, error); \
+            logger_.log(Logger::ERR,"COMMAND ERROR: %s %d", message, error); \
             usb_destroy_device(commDevice_, error); \
             errorcode_ = error; \
             return; \
@@ -59,7 +59,7 @@ DUT::~DUT()
     int error = DestroyContext(&lcdContext_);
 
     if (0 != error) {
-        logger_.log(Logger::ERROR, "LCD ERROR: Failed to destroy LCD context %d", error);
+        logger_.log(Logger::ERR, "LCD ERROR: Failed to destroy LCD context %d", error);
     } else {
         logger_.log(Logger::INFO, "LCD context destroyed successfully");
     }

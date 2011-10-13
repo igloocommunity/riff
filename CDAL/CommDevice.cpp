@@ -10,9 +10,11 @@
  *
  */
 
+#include "stdafx.h"
 #include "CommDevice.h"
 #include "AsyncCommunication.h"
 
+using namespace std;
 CommDevice::CommDevice(): isReadCanceled_(false)
 {
     async_ = new AsyncCommunication(this);

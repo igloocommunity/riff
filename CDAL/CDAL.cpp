@@ -10,6 +10,7 @@
  *
  */
 
+#include "stdafx.h"
 #include "CDAL.h"
 #include "Debug.h"
 #include "CommDevice.h"
@@ -17,20 +18,27 @@
 #include "CommException.h"
 #include "Event.h"
 #include "Thread.h"
-#include "LibusbDevice.h"
-#include <libusb.h>
 #include <vector>
 #include <stdio.h>
 #include <stdlib.h>
+#ifdef _WIN32
+#include "LibusbDevice_win.h"
+#else
+#include "LibusbDevice.h"
+#endif
 using namespace std;
+
+#ifndef _WIN32
+static libusb_context* context;
+#endif
 
 static int DUT_VENDOR_ID = 0x04cc;
 static int DUT_PRODUCT_ID = 0x8500;
-static libusb_context* context;
 static Thread* workerThread;
 static void* LibusbWorker(void* arg);
 volatile bool shutdown = false;
 int error = 0;
+
 
 static EventCallback_t OnDeviceCallback = NULL;
 
@@ -44,8 +52,13 @@ void usb_init_driver(const char* vendorId, const char* productId)
         DUT_PRODUCT_ID = strtol(productId, NULL, 16);
     }
 
+#ifdef _WIN32
+    usb_init();
+    usb_set_debug(2);
+#else
     libusb_init(&context);
-    libusb_set_debug(context, 3);
+    libusb_set_debug(context, 2);
+#endif
 
     workerThread = new Thread(LibusbWorker, 0);
 }
@@ -63,7 +76,10 @@ void usb_deinit_driver()
 
     CommDeviceManager::destroyAll();
 
+#ifndef _WIN32
     libusb_exit(context);
+#endif
+
 }
 
 void usb_destroy_device(Device_t device, int error_code)
@@ -134,11 +150,102 @@ void comm_progress(void *Communication_p, unsigned long long totalbytes,
     fflush(stdout);
 }
 
+#ifdef _WIN32
+// As we are going to use libusb 0.1 version in Windows,
+// this function needs to be re-writtten with the API
+// related to the 0.1 version. The libusb 1.0 and 0.1
+// differs a lot according to their function calls and
+// the way USB devices are recognized and handled.
+static void* LibusbWorker(void* arg)
+{
+    struct usb_bus *busses;
+    struct usb_bus *bus;
+
+    while (!shutdown) {
+
+        usb_find_busses();
+        usb_find_devices();
+        busses = usb_get_busses();
+
+        if(busses == NULL ) {
+            Debug::info("No USB device connected.");
+            Sleep(10);
+            continue;
+        }
+
+        for (bus = busses; bus; bus = bus->next) {
+            struct usb_device *dev = NULL;
+
+            for (dev = bus->devices; dev; dev = dev->next) {
+                if ((dev->descriptor.idProduct == DUT_PRODUCT_ID) && (dev->descriptor.idVendor == DUT_VENDOR_ID) && (!shutdown)) {
+
+                LibusbDevice *device;
+
+                device = CommDeviceManager::getDevice<LibusbDevice>(dev);
+
+                if (0 == device) {
+                    // new device found
+                    try {
+                        device = CommDeviceManager::createDevice <LibusbDevice> (dev);
+                        Debug::info("Libusb worker: Connected libusb device");
+                        OnDeviceCallback(COMM_DEVICE_SUCCESS,
+                                         LIBUSB_DEVICE_CONNECTED, device);
+                    } catch (CommException e) {
+                        Debug::error("Libusb worker: %s", e.what());
+                        OnDeviceCallback(e.getError(),
+                                         COMM_DEVICE_UNDEFINED_EVENT, 0);
+                    }
+                 }
+              }
+           }
+        }
+
+        vector<CommDevice*> devices = CommDeviceManager::getAllDevices();
+
+        for (vector<CommDevice*>::iterator i = devices.begin(); i
+                != devices.end(); ++i) {
+            LibusbDevice* device = dynamic_cast<LibusbDevice*>(*i);
+
+            if (0 == device) {
+                continue;
+            }
+
+            bool connected = false;
+            struct usb_device *dev;
+            for (bus = busses; bus; bus = bus->next) {
+                for (dev = bus->devices; dev; dev = dev->next) {
+                    if (dev == device->getPort()) {
+                        connected = true;
+                        break;
+                    }
+                }
+                if(connected == true)
+                   break;
+            }
+
+            if (!connected) {
+                Debug::info("Libusb worker: Disconnected device with id %d", *i);
+                OnDeviceCallback(COMM_DEVICE_SUCCESS,
+                                 LIBUSB_DEVICE_DISCONNECTED, *i);
+                shutdown = true;
+            }
+        }
+
+        Sleep(10);
+    }
+
+    return 0;
+}
+#else
+// In Linux, libusb 1.0 version is used. Therefore,
+// the below LibusbWorker function is based on API
+// for libusb 1.0 for handling USB devices.
 static void* LibusbWorker(void* arg __attribute__((unused)))
 {
     timespec delay;
     delay.tv_sec = 0;
     delay.tv_nsec = 10 * 1000000; // 10ms
+
     libusb_device** deviceList;
     ssize_t deviceCount;
     libusb_device_descriptor descriptor;
@@ -220,4 +327,5 @@ static void* LibusbWorker(void* arg __attribute__((unused)))
 
     return 0;
 }
+#endif
 

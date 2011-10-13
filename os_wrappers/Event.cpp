@@ -44,13 +44,16 @@ void Event::signal()
 #endif
 }
 
+#ifdef _WIN32
+void Event::wait(unsigned long timeout)
+{
+    WaitForSingleObject(semaphore_, timeout);
+}
+#else
 void Event::wait(unsigned long timeout __attribute__((unused)))
 {
-#ifdef _WIN32
-    WaitForSingleObject(semaphore_, timeout);
-#else
     sem_wait(&semaphore_);
-#endif
 }
+#endif
 
 /* @} */

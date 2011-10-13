@@ -24,6 +24,7 @@ SOURCE_FILES= \
 	./CommDeviceManager.cpp \
 	./CommException.cpp \
 	./LibusbDevice.cpp \
+	./stdafx.cpp \
 	../os_wrappers/CriticalSection.cpp \
 	../os_wrappers/Event.cpp \
 	../os_wrappers/Thread.cpp \
@@ -34,8 +35,9 @@ HEADER_FILES= \
 	./CommDevice.h \
 	./CommDeviceManager.h \
 	./CommException.h \
-	./LibusbDevice.h \
 	./Debug.h \
+	./LibusbDevice.h \
+	./stdafx.h \
 	../os_wrappers/CriticalSection.h \
 	../os_wrappers/Event.h \
 	../os_wrappers/Thread.h \
@@ -48,6 +50,7 @@ OBJS= \
 	./CommDeviceManager.o \
 	./CommException.o \
 	./LibusbDevice.o \
+	./stdafx.o \
 	../os_wrappers/CriticalSection.o \
 	../os_wrappers/Event.o \
 	../os_wrappers/Thread.o \

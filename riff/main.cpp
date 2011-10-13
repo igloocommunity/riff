@@ -30,7 +30,7 @@ volatile bool isDone = false;
 const string info = \
                     "\n \
 ----------------------- riff - Raw Image File Flasher -------------------------\n \
-Version: 0.4.2\n \
+Version: 0.5.0\n \
 "
                     "Flash a device. Try `riff --help' for more information. \n \
 "
@@ -83,7 +83,11 @@ int main(int argc, char* argv[])
     logger_->log(Logger::PROGRESS, "Listening on USB for device connection...");
 
     while (!isDone) {
+#ifdef _WIN32
+        Sleep(1000);
+#else
         sleep(1);
+#endif
     }
 
     usb_deinit_driver();
@@ -114,7 +118,7 @@ void UsbDeviceEventCallback(DeviceStatus_t status, DeviceEvent_t event, Device_t
             }
 
             break;
-        case LIBUSB_DEVICE_DISCONNECTED: {
+        case LIBUSB_DEVICE_DISCONNECTED:
             logger_->log(Logger::INFO, "Disconnect detected on USB@%u", comm_get_physical_address(device));
             dut = DutManager::getDut(device);
 
@@ -125,18 +129,17 @@ void UsbDeviceEventCallback(DeviceStatus_t status, DeviceEvent_t event, Device_t
             }
 
             isDone = true;
-        }
-        break;
+            break;
         default:
-            logger_->log(Logger::ERROR, "Unknown USB event %d", event);
+            logger_->log(Logger::ERR, "Unknown USB event %d", event);
             break;
         }
     } else if (COMM_DEVICE_LIBUSB_FAILED_TO_OPEN_PORT == status) {
-        logger_->log(Logger::ERROR, "Cannot open USB device. Are you root?", status);
+        logger_->log(Logger::ERR, "Cannot open USB device. Are you root?", status);
         isDone = true;
         exitstatus = 1;
     } else {
-        logger_->log(Logger::ERROR, "USB device error %d", status);
+        logger_->log(Logger::ERR, "USB device error %d", status);
     }
 }
 void handleCmdLineInput(int argc, char* argv[])
@@ -191,7 +194,11 @@ void handleCmdLineInput(int argc, char* argv[])
 
     if (!configPathSet) {
         FILE* userConfig;
+#ifdef _WIN32
+        char* home = getenv("USERPROFILE");
+#else
         char* home = getenv("HOME");
+#endif
         char homeConfigPath[50];
         strcpy(homeConfigPath, home);
         strcat(homeConfigPath, "/.riff/config");
@@ -203,25 +210,28 @@ void handleCmdLineInput(int argc, char* argv[])
             strcpy(configFile, homeConfigPath);
             fclose(userConfig);
         }
-        else
-        {
-        	// It will check the default config in /usr/share folder otherwise
-			userConfig = fopen(configFile, "r");
-			if(userConfig == NULL)
-			{
-				cout << cmdHelpString << endl;
-				_exit(0);
-			}
+        else {
+             // It will check the default config in /usr/share folder otherwise
+             // or /<current directory>/riff/config
+             userConfig = fopen(configFile, "r");
+             if(userConfig == NULL) {
+                 cout << cmdHelpString << endl;
+                 _exit(0);
+             }
         }
 
 
     }
-	if (*dumpPath == '\0') {
-		//Sets default dump path if not provided
-		char* home = getenv("HOME");
-		strcpy(dumpPath, home);
-		strcat(dumpPath, "/flashdump.bin");
-	}
+    if (*dumpPath == '\0') {
+       //Sets default dump path if not provided
+#ifdef _WIN32
+       char* home = ".";
+#else
+       char* home = getenv("HOME");
+#endif
+       strcpy(dumpPath, home);
+       strcat(dumpPath, "/flashdump.bin");
+    }
     SequenceFactory::setArguments(configFile, mode, flashimage, address, length, dumpPath);
 }
 

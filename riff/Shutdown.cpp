@@ -31,7 +31,7 @@ int Shutdown::run(DUT* dut)
     int error = System_Shutdown(dut->getLCDContext());
     if (0 != error)
     {
-    	logger_.log(Logger::ERROR,"LCD ERROR: Device shutdown failed %d", error);
+        logger_.log(Logger::ERR,"LCD ERROR: Device shutdown failed %d", error);
         return error;
     }
 

@@ -1,8 +1,8 @@
 Package: riff
-Version: 0.4.2
+Version: 0.5.0
 Priority: optional
 Architecture: all
-Depends: libusb-1.0-0, riff-configpack (>= 0.4.2), riff-loadercomm (>= 0.4.2)
+Depends: libusb-1.0-0, riff-configpack (>= 0.4.3), riff-loadercomm (>= 0.4.3)
 Installed-Size: 
 Maintainer: packages@igloocommunity.org
 Section: devel

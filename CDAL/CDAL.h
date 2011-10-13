@@ -14,11 +14,20 @@
  * channel.
  */
 #pragma once
+
+#if defined(_WIN32)
+#ifdef CDAL_EXPORTS
+#define CDAL_API __declspec(dllexport)
+#else
+#define CDAL_API __declspec(dllimport)
+#endif
+#elif defined(__linux__)
 #include <cstddef>
 #ifdef CDAL_EXPORTS
 #define CDAL_API __attribute__((visibility("default")))
 #else
 #define CDAL_API
+#endif
 #endif
 
 // type of the device
@@ -38,7 +47,8 @@ typedef enum {
     COMM_DEVICE_UART_FAILED_TO_CONFIGURE_PORT = 5,
     COMM_DEVICE_LIBUSB_FAILED_TO_OPEN_PORT = 6,
     COMM_DEVICE_LIBUSB_FAILED_TO_CLAIM_INTERFACE = 7,
-    COMM_DEVICE_PEEK_BUFFER_SIZE_ERROR = 8
+    COMM_DEVICE_PEEK_BUFFER_SIZE_ERROR = 8,
+    COMM_DEVICE_LIBUSB_FAILED_TO_SET_CONFIG = 9
 } DeviceStatus_t;
 
 // device events codes

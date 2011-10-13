@@ -15,6 +15,7 @@
  * @{
  */
 
+
 #include "Config.h"
 #include "Utilities.h"
 #include <fstream>
@@ -61,7 +62,7 @@ bool Config::load(const string& path)
 
         return true;
     } else {
-        logger_.log(Logger::ERROR, "Failed to open configuration file \"%s\"", path.c_str());
+        logger_.log(Logger::ERR, "Failed to open configuration file \"%s\"", path.c_str());
         return false;
     }
 }
