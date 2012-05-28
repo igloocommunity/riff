@@ -27,6 +27,9 @@
 #include <string>
 #include <vector>
 
+#define MAX_LCD_LONGDESC    512
+#define MAX_LCD_SHORTDESC   128
+
 /**
  * @brief Class that wraps all parameters related to the connected device.
  *
@@ -118,6 +121,7 @@ private:
     bool shutdown_;
     static void* ExecutionThreadFunction(void* arg);
     void executeSequence();
+    void displayLCDError(uint32 errorno);
 };
 
 /* @} */

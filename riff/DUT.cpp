@@ -60,6 +60,7 @@ DUT::~DUT()
 
     if (0 != error) {
         logger_.log(Logger::ERR, "LCD ERROR: Failed to destroy LCD context %d", error);
+        displayLCDError(error);
     } else {
         logger_.log(Logger::INFO, "LCD context destroyed successfully");
     }
@@ -96,6 +97,7 @@ void DUT::executeSequence()
         if ((error != 0) && (!strcmp((*i)->get_command_name(), "INITIALIZE_DUT"))) {
             errorcode_ = error;
         } else if ((error != 0) && (strcmp((*i)->get_command_name(), "SHUTDOWN"))) {
+            displayLCDError(error);
             continue;
         }
 
@@ -110,6 +112,20 @@ void* DUT::ExecutionThreadFunction(void* arg)
     DUT* dut = static_cast<DUT*>(arg);
     dut->executeSequence();
     return 0;
+}
+
+void DUT::displayLCDError(uint32 errorno)
+{
+    char ShortDescription[MAX_LCD_SHORTDESC], LongDescription[MAX_LCD_LONGDESC];
+
+    memset(LongDescription, 0x00, MAX_LCD_LONGDESC);
+    memset(ShortDescription, 0x00, MAX_LCD_SHORTDESC);
+    GetLoaderErrorDescription(errorno, (uint8 *)ShortDescription, (uint8 *)LongDescription, MAX_LCD_SHORTDESC, MAX_LCD_LONGDESC);
+    if (strlen(LongDescription) != 0) {
+       logger_.log(Logger::ERR, "LCD ERROR %d : %s", errorno, LongDescription);
+    }
+
+    return;
 }
 
 /* @} */

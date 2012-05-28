@@ -55,7 +55,7 @@ int ProcessRawImage::run(DUT* dut)
         logger_.log(Logger::PROGRESS, "Flashing finished successfully");
     } else {
         error = -1;
-        logger_.log(Logger::ERR,"LCD ERROR: Flash image is empty or doesn't exist %d", error);
+        logger_.log(Logger::ERR,"ERROR: Flash image is empty or doesn't exist %d", error);
         return error;
     }
 

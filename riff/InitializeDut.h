@@ -79,6 +79,7 @@ private:
     int readMeminitFile(char* buf);
     int readNormal(char* buf);
     int initializeHardware(Device_t device);
+    void displayLCDError(const char* message, uint32 errorno);
 
 };
 

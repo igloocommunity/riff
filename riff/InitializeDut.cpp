@@ -378,18 +378,18 @@ int InitializeDut::run(DUT* dut)
     error = initializeHardware(commDevice);
     if (0 != error)
     {
-        logger_.log(Logger::ERR,"LCD ERROR: Error while initializing device %d", error);
+        logger_.log(Logger::ERR,"ERROR: Error while initializing device %d", error);
         return error;
     }
 
-    logger_.log(Logger::INFO, "Initializing finished");
+    logger_.log(Logger::INFO, "Hardware Initialization finished");
 
     logger_.log(Logger::INFO, "Starting initialization of LCD...");
     void** deviceObjectStorage = comm_get_object_storage(commDevice);
     error = CreateContext(&lcdContext, dut->getId());
     if (0 != error)
     {
-        logger_.log(Logger::ERR,"LCD ERROR: Error while creating LCD context %d", error);
+        displayLCDError("Error while creating LCD context", error);
         return error;
     }
 
@@ -397,7 +397,7 @@ int InitializeDut::run(DUT* dut)
     error = ConfigureCommunicationDevice(lcdContext, (void*)comm_read_nowait, (void*)comm_write_nowait, (void*)comm_cancel);
     if (0 != error)
     {
-        logger_.log(Logger::ERR,"LCD ERROR: Error while configuring communication device %d", error);
+        displayLCDError("Error while configuring communication device", error);
         return error;
     }
 
@@ -405,15 +405,14 @@ int InitializeDut::run(DUT* dut)
     error = SwitchProtocolFamily(lcdContext, R15_PROTOCOL_FAMILY);
     if (0 != error)
     {
-        logger_.log(Logger::ERR,"LCD ERROR: Error while setting protocol family %d", error);
+        displayLCDError("Error while setting protocol family", error);
         return error;
     }
-
 
     error = StartContext(lcdContext, deviceObjectStorage);
     if (0 != error)
     {
-        logger_.log(Logger::ERR,"LCD ERROR: Error while starting LCD context %d", error);
+        displayLCDError("Error while starting LCD context", error);
         return error;
     }
 
@@ -422,7 +421,7 @@ int InitializeDut::run(DUT* dut)
     error = SetProgressCallback(lcdContext, (void*)comm_progress);
     if (0 != error)
     {
-        logger_.log(Logger::ERR,"LCD ERROR: Error while setting Progress listener %d", error);
+        displayLCDError("Error while setting Progress listener", error);
         return error;
     }
 
@@ -431,7 +430,7 @@ int InitializeDut::run(DUT* dut)
     error = System_LoaderStartupStatus(dut->getLCDContext(), version, &versionSize, protocol, &protocolSize);
     if (0 != error)
     {
-        logger_.log(Logger::ERR,"LCD ERROR: Failed to receive loader startup status %d", error);
+        displayLCDError("Failed to receive loader startup status", error);
         return error;
     }
 
@@ -447,6 +446,21 @@ int InitializeDut::run(DUT* dut)
 const char * InitializeDut::get_command_name()
 {
     return (char *)"INITIALIZE_DUT";
+}
+
+void InitializeDut::displayLCDError(const char* message, uint32 errorno)
+{
+    char ShortDescription[MAX_LCD_SHORTDESC], LongDescription[MAX_LCD_LONGDESC];
+
+    logger_.log(Logger::ERR,"LCD ERROR: %s %d", message, errorno);
+
+    memset(LongDescription, 0x00, MAX_LCD_LONGDESC);
+    memset(ShortDescription, 0x00, MAX_LCD_SHORTDESC);
+    GetLoaderErrorDescription(errorno, (uint8 *)ShortDescription, (uint8 *)LongDescription, MAX_LCD_SHORTDESC, MAX_LCD_LONGDESC);
+    if (strlen(LongDescription) != 0)
+       logger_.log(Logger::ERR, "LCD ERROR %d : %s", errorno, LongDescription);
+
+    return;
 }
 
 /* @} */
