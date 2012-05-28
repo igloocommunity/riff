@@ -160,20 +160,24 @@ int InitializeDut::sendTocIssw(Device_t device)
     bootIndication = 0xf0030002;
 
     if (comm_write(device, (char*)&bootIndication, 4) < 0)
+    {
+        logger_.log(Logger::ERR,"ERROR: Failed to send boot indication to device");
         return -1;
+    }
 
     if (comm_write(device, (char*)&sendBufferSize, 4) < 0)
+    {
+        logger_.log(Logger::ERR,"ERROR: Failed to send TOC+ISSW size to device");
         return -1;
+    }
 
     memcpy(sendBuffer, tocSections, 512);
     readIsswFile(sendBuffer + 512);
 
-    commWrite2kChunks(device, sendBuffer, sendBufferSize);
-
-    return 0;
+    return commWrite2kChunks(device, sendBuffer, sendBufferSize);
 }
 
-int InitializeDut::createTocEntry(tocSection* issw, tocSection* xload, tocSection* meminit, tocSection* normal, tocSection* pwrMgt)
+void InitializeDut::createTocEntry(tocSection* issw, tocSection* xload, tocSection* meminit, tocSection* normal, tocSection* pwrMgt)
 {
     int offset = 512;
 
@@ -189,7 +193,7 @@ int InitializeDut::createTocEntry(tocSection* issw, tocSection* xload, tocSectio
         *normal = *pwrMgt;
     }
 
-    return 0;
+    return;
 }
 
 int InitializeDut::createTocFile(tocSection* toc, const char* filePath, const char* tocName, int* offset)
@@ -197,7 +201,10 @@ int InitializeDut::createTocFile(tocSection* toc, const char* filePath, const ch
     size_t size = 0;
 
     if ((filePath == NULL) || (strlen(filePath) == 0))
+    {
+        logger_.log(Logger::ERR,"ERROR: Failed to create TOC Entry, empty file path for %s", tocName);
         return -1;
+    }
 
     size = getFileSize(filePath);
 
@@ -241,24 +248,36 @@ int InitializeDut::initializeHardware(Device_t device)
     normalPath_ = config.getValue("NORMALPATH");
 
     if (comm_write(device, (char*)&byteSynchro, 4) < 0)
+    {
+        logger_.log(Logger::ERR,"ERROR: Failed to send synchronization byte to device");
         return -1;
+    }
 
     if (comm_read(device, asicIdUsb, 65) < 0)
+    {
+        logger_.log(Logger::ERR,"ERROR: Failed to read asic id from device");
         return -1;
+    }
 
     secureMode = asicIdUsb[11];
 
-    if (createTocEntry(&issw_, &xload_, &meminit_, &normal_, &pwrMgt_))
-        return -1;
+    // Create TOC entry
+    createTocEntry(&issw_, &xload_, &meminit_, &normal_, &pwrMgt_);
 
-    if (sendTocIssw(device))
+    if (sendTocIssw(device) != 0)
+    {
+        logger_.log(Logger::ERR,"ERROR: Failed to send TOC+ISSW to device");
         return -1;
+    }
 
     while (1) {
         unsigned int reqId;
 
         if (comm_read(device, (char*)&reqId, 4) < 0)
+        {
+            logger_.log(Logger::ERR,"ERROR: Failed to read next token id from device");
             return -1;
+        }
 
         char *sendBuffer = NULL;
 
@@ -277,8 +296,6 @@ int InitializeDut::initializeHardware(Device_t device)
             	free(sendBuffer);
             	return -1;
             }
-
-
 
             commWrite2kChunks(device, sendBuffer, xload_.size);
             logger_.log(Logger::INFO, "X-LOADER sent");
@@ -378,7 +395,8 @@ int InitializeDut::run(DUT* dut)
     error = initializeHardware(commDevice);
     if (0 != error)
     {
-        logger_.log(Logger::ERR,"ERROR: Error while initializing device %d", error);
+        logger_.log(Logger::ERR,"ERROR: Error while initializing device, please check that you are using correct config-pack");
+        logger_.log(Logger::ERR,"ERROR: Please visit http://igloocommunity.org/support/Riff for more details");
         return error;
     }
 

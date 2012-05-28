@@ -70,7 +70,7 @@ private:
 
     int commWrite2kChunks(Device_t device, void* buffer, size_t size);
     int sendTocIssw(Device_t device);
-    int createTocEntry(tocSection* issw, tocSection* xload, tocSection* meminit, tocSection* normal, tocSection* pwrMgt);
+    void createTocEntry(tocSection* issw, tocSection* xload, tocSection* meminit, tocSection* normal, tocSection* pwrMgt);
     int createTocFile(tocSection* toc, const char* filePath, const char* tocName, int* offset);
     int getFileSize(const char* filePath);
     int readIsswFile(char* buf);
