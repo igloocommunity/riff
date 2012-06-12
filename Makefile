@@ -28,29 +28,6 @@ depends:
 	cd CDAL/ && $(MAKE) -f CDAL.mk depends
 	cd CDAL/ && $(MAKE) -f CDAL.mk depends
 
-.PHONY: debian
-debian:	clean all 
-	mkdir -p debian/DEBIAN
-	mkdir -p debian/usr/bin
-	mkdir -p debian/usr/lib
-	mkdir -p debian/usr/share/doc/riff
-	mkdir -p debian/usr/share/man/man1
-	mkdir doc/man/temp
-	nroff -man doc/man/man1 > doc/man/temp/riff.1
-	gzip doc/man/temp/riff.1
-	
-	cp packages/control debian/DEBIAN/
-	cp riff/riff debian/usr/bin/
-	cp LICENSE debian/usr/share/doc/riff/
-	cp README debian/usr/share/doc/riff/
-
-	cp CDAL/libcdal.so debian/usr/lib/
-	cp -r doc/man/temp/riff.1.gz debian/usr/share/man/man1
-	
-	fakeroot dpkg-deb --build debian packages/riff.deb || error
-	rm -rf debian
-	rm -rf doc/man/temp
-
 INSTDIR = $(DESTDIR)$(PREFIX)
 
 .PHONY: install
