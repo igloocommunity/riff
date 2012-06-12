@@ -2,7 +2,7 @@
 
 PREFIX := /usr
 CXX=g++
-CFLAGS=-I../os_wrappers -I../CDAL -D_FILE_OFFSET_BITS=64 -DRIFF_CONFIG_PREFIX=\"$(PREFIX)\"
+CFLAGS=-I../os_wrappers -I../CDAL -D_FILE_OFFSET_BITS=64 -DRIFF_CONFIG_PREFIX=\"$(PREFIX)\" -I/usr/include/loadercomm
 CXXFLAGS=$(CFLAGS)
 LD=$(CXX) $(CXXFLAGS)
 LDFLAGS=-L../CDAL
