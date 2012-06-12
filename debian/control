@@ -1,0 +1,32 @@
+Source: riff
+Section: devel
+Priority: extra
+Maintainer: Kalle Vahlman <kalle.vahlman@movial.com>
+Build-Depends: debhelper (>= 8.0.0), libloadercomm-dev
+Standards-Version: 3.9.2
+Homepage: http://igloocommunity.org
+
+Package: libcdal-dev
+Section: libdevel
+Architecture: any
+Depends: libcdal1 (= ${binary:Version})
+Description: Communication Device Abstraction Library headers
+ Communication Device Abstraction Library is a support library
+ for the riff flashing tool.
+
+Package: libcdal1
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Conflicts: riff (<= 0.4.2)
+Replaces: riff (<= 0.4.2)
+Description: Communication Device Abstraction Library library
+ Communication Device Abstraction Library is a support library
+ for the riff flashing tool.
+
+Package: riff
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libcdal1, libloadercomm1, riff-configpack (>= 0.4.4)
+Description: Flashing tool for Snowball
+ A flashing tool initially developed for igloocommunity.org
+ and ST-E Snowball devices.

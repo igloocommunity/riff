@@ -1,0 +1,6 @@
+riff (0.5.1-igloo1) oneiric; urgency=low
+
+  * Re-packaging of riff.
+  * Error message improvements
+
+ -- Kalle Vahlman <kalle.vahlman@movial.com>  Tue, 12 Jun 2012 10:17:53 +0300
