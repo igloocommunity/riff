@@ -24,6 +24,8 @@
 #include <cstring>
 #include <cstdlib>
 #include <cstdio>
+#include <unistd.h>
+
 using namespace std;
 
 volatile bool isDone = false;
