@@ -6,7 +6,7 @@ CFLAGS=-I../os_wrappers -I../CDAL -D_FILE_OFFSET_BITS=64 -DRIFF_CONFIG_PREFIX=\"
 CXXFLAGS=$(CFLAGS)
 LD=$(CXX) $(CXXFLAGS)
 LDFLAGS=-L../CDAL
-LIBS+=-llcdriver -lcdal -lstdc++ -lc
+LIBS+=-llcdriver -lcdal -lstdc++ -lc -lpthread
 
 ifndef TARGET
 TARGET=riff
