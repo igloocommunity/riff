@@ -2,7 +2,7 @@ Source: riff
 Section: devel
 Priority: extra
 Maintainer: Kalle Vahlman <kalle.vahlman@movial.com>
-Build-Depends: debhelper (>= 8.0.0), libloadercomm-dev
+Build-Depends: debhelper (>= 8.0.0), libloadercomm-dev, libusb-1.0-0-dev
 Standards-Version: 3.9.2
 Homepage: http://igloocommunity.org
 
