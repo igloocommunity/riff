@@ -20,6 +20,8 @@ using namespace std;
 
 #define MIN(A, B) ((A) < (B) ? (A) : (B))
 
+#define CHUNKSIZE 16384 //16 kB
+
 LibusbDevice::LibusbDevice(libusb_device* device): device_(device)
 {
     int status = libusb_open(device_, &handle_);
@@ -120,8 +122,10 @@ int LibusbDevice::write(void *buffer, size_t size)
 
     while (size) {
         int transfered;
+        int chunkSize = size > CHUNKSIZE ? CHUNKSIZE : size;
+
         //Call with timeout to enable possible cancel
-        int error = libusb_bulk_transfer(handle_, outEndpoint_, src, size, &transfered, 0);
+        int error = libusb_bulk_transfer(handle_, outEndpoint_, src, chunkSize, &transfered, 0);
 
         if (error) {
             if (error == LIBUSB_ERROR_TIMEOUT) {
