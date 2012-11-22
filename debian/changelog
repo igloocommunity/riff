@@ -1,3 +1,10 @@
+riff (0.5.2-igloo1) precise; urgency=low
+
+  * Split large writes into 16k chunks. Fixes lp bug #1062451
+  * Misc. compilation fixes
+
+ -- Kalle Vahlman <kalle.vahlman@movial.com>  Thu, 22 Nov 2012 08:38:47 +0200
+
 riff (0.5.1-igloo2) oneiric; urgency=low
 
   * Add libusb-1.0-0-dev to build-deps
