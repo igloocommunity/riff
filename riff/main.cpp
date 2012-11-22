@@ -32,7 +32,7 @@ volatile bool isDone = false;
 const string info = \
                     "\n \
 ----------------------- riff - Raw Image File Flasher -------------------------\n \
-Version: 0.5.1\n \
+Version: 0.5.2\n \
 "
                     "Flash a device. Try `riff --help' for more information. \n \
 "

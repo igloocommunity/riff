@@ -1,4 +1,4 @@
-riff - Raw Image File Flasher version 0.5.1
+riff - Raw Image File Flasher version 0.5.2
 
 =================================================================================
 Description:
@@ -106,6 +106,7 @@ Version history and changelog:
 0.4.2 Larger image file support.
 0.5.0 Support for Windows.
 0.5.1 Error description for LCD error number
+0.5.2 Build fixes, split large writes into 16k chunks
 
 =================================================================================
 Contact and support
